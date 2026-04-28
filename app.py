@@ -5,6 +5,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ---------- DB INIT ----------
+# ---------- DB INIT ----------
 def init_db():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
@@ -19,6 +20,9 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+
+# ✅ ADD THIS LINE HERE (VERY IMPORTANT)
+init_db()
 
 def get_db():
     return sqlite3.connect('database.db')
@@ -79,9 +83,9 @@ def delete(id):
     conn.close()
     return redirect('/')
 
+
 # ---------- START ----------
 import os
 
-if __name__ == "__main__":
-    init_db()
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+
+init_db()
