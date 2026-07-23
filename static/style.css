@@ -211,3 +211,117 @@ html {
     white-space: nowrap;
   }
 }
+
+
+/* ================= SEARCH & FILTER ================= */
+
+.search-filter-container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin:25px 0;
+}
+
+.search-form,
+.filter-form{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.search-form input,
+.filter-form input{
+    padding:12px 15px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+    transition:0.3s;
+}
+
+.search-form input{
+    width:260px;
+}
+
+.search-form input:focus,
+.filter-form input:focus{
+    border-color:#4CAF50;
+    box-shadow:0 0 8px rgba(76,175,80,.3);
+}
+
+.search-form button,
+.filter-form button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.search-form button:hover,
+.filter-form button:hover{
+    background:#388E3C;
+    transform:translateY(-2px);
+}
+
+.clear-btn{
+    background:#e4eee5 !important;
+}
+
+.clear-btn:hover{
+    background:#648cad !important;
+}
+
+.edit-btn,
+.delete-btn{
+    text-decoration:none;
+    padding:8px 14px;
+    border-radius:8px;
+    color:white;
+    font-size:14px;
+    margin-right:8px;
+    transition:.3s;
+}
+
+.edit-btn{
+    background:#2196F3;
+}
+
+.edit-btn:hover{
+    background:#1976D2;
+}
+
+.delete-btn{
+    background:#F44336;
+}
+
+.delete-btn:hover{
+    background:#D32F2F;
+}
+
+
+.export-container{
+    text-align:right;
+    margin:20px 0;
+}
+
+.export-btn{
+    display:inline-block;
+    background:#6f42c1;
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.export-btn:hover{
+    background:#563d7c;
+}

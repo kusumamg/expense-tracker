@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Transaction</title>
+</head>
+<body>
+
+<h2>Edit Transaction</h2>
+
+<form method="POST">
+
+    <input
+        type="text"
+        name="name"
+        value="{{ item[1] }}"
+        required>
+
+    <select name="type">
+
+        <option value="income"
+        {% if item[2]=="income" %}selected{% endif %}>
+        Income
+        </option>
+
+        <option value="expense"
+        {% if item[2]=="expense" %}selected{% endif %}>
+        Expense
+        </option>
+
+    </select>
+
+    <input
+        type="number"
+        name="amount"
+        value="{{ item[3] }}"
+        required>
+
+    <input
+        type="date"
+        name="date"
+        value="{{ item[4] }}"
+        required>
+
+    <button type="submit">
+        Update
+    </button>
+
+</form>
+
+<br>
+
+<a href="/">⬅ Back</a>
+
+</body>
+</html>
