@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Analytics{% endblock %}
+
+{% block content %}
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Income</h3>
+        <h2>${{ income }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Total Expense</h3>
+        <h2>${{ expense }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Balance</h3>
+        <h2>${{ balance }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Total Transactions</h3>
+        <h2>{{ total }}</h2>
+    </div>
+
+</div>
+
+<div class="box">
+
+    <canvas id="analyticsChart"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx=document.getElementById("analyticsChart");
+
+new Chart(ctx,{
+
+type:"bar",
+
+data:{
+
+labels:["Income","Expense"],
+
+datasets:[{
+
+label:"Amount",
+
+data:[{{ income }},{{ expense }}]
+
+}]
+
+}
+
+});
+
+</script>
+
+{% endblock %}

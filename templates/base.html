@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        FinTrack
+        {% endblock %}
+    </title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <div class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-wallet"></i>
+            <span>FinTrack</span>
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="/dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/transactions">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Transactions</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/add_transaction">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Add Transaction</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/reports">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/analytics">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Analytics</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/settings">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="logout">
+            <a href="#">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main" id="main-content">
+
+        <!-- Top Bar -->
+
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <h2 class="page-title">
+                    {% block page_title %}
+                    Dashboard
+                    {% endblock %}
+                </h2>
+
+            </div>
+
+            <div class="top-right">
+
+                <button class="icon-btn" id="searchBtn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <button class="icon-btn" id="notificationBtn">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <img
+                    src="https://ui-avatars.com/api/?name=Kusuma&background=2563EB&color=fff"
+                    class="profile"
+                    alt="Profile">
+
+            </div>
+
+        </header>
+
+        <!-- Search Box -->
+
+        <div id="searchBox" class="search-box">
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <!-- Notification Panel -->
+
+        <div id="notificationPanel" class="notification-panel">
+            <h3>Notifications</h3>
+            <hr>
+            <p>No new notifications.</p>
+        </div>
+
+        <!-- Page Content -->
+
+        <section class="content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

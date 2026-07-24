@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= SUMMARY CARDS ================= -->
+
+<div class="cards">
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Balance</h4>
+
+                <h2>₹{{ balance }}</h2>
+
+            </div>
+
+            <div class="card-icon blue">
+
+                <i class="fa-solid fa-wallet"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Income</h4>
+
+                <h2>₹{{ income }}</h2>
+
+            </div>
+
+            <div class="card-icon green">
+
+                <i class="fa-solid fa-arrow-trend-up"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Expense</h4>
+
+                <h2>₹{{ expense }}</h2>
+
+            </div>
+
+            <div class="card-icon red">
+
+                <i class="fa-solid fa-arrow-trend-down"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Transactions</h4>
+
+                <h2>{{ data|length }}</h2>
+
+            </div>
+
+            <div class="card-icon gray">
+
+                <i class="fa-solid fa-receipt"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= SECOND ROW ================= -->
+
+<div class="dashboard-grid">
+
+    <!-- ADD TRANSACTION -->
+
+    <div class="box">
+
+        <h2>Add Transaction</h2>
+
+        <br>
+
+        <form action="/add" method="POST">
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Description"
+                required>
+
+            <br><br>
+
+            <select name="type">
+
+                <option value="income">
+
+                    Income
+
+                </option>
+
+                <option value="expense">
+
+                    Expense
+
+                </option>
+
+            </select>
+
+            <br><br>
+
+            <input
+                type="number"
+                name="amount"
+                placeholder="Amount"
+                required>
+
+            <br><br>
+
+            <input
+                type="date"
+                name="date"
+                value="{{ current_date }}"
+                required>
+
+            <br><br>
+
+            <button class="btn">
+
+                Add Transaction
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- RECENT TRANSACTIONS -->
+
+    <div class="box">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+
+            <h2>Recent Transactions</h2>
+
+            <a href="/transactions">
+
+                View All
+
+            </a>
+
+        </div>
+
+        <br>
+
+        <table>
+
+            <tr>
+
+                <th>Description</th>
+
+                <th>Amount</th>
+
+            </tr>
+
+            {% for item in data[:5] %}
+
+            <tr>
+
+                <td>
+
+                    {{ item[1] }}
+
+                </td>
+
+                <td>
+
+                    {% if item[2]=="income" %}
+
+                    <span style="color:#22C55E;font-weight:600;">
+
+                        +₹{{ item[3] }}
+
+                    </span>
+
+                    {% else %}
+
+                    <span style="color:#EF4444;font-weight:600;">
+
+                        -₹{{ item[3] }}
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- ================= CHART ================= -->
+
+<div class="box">
+
+    <h2>Income vs Expense</h2>
+
+    <br>
+
+    <canvas id="myChart"></canvas>
+
+</div>
+
+<script>
+
+const income = {{income|tojson}};
+const expense = {{expense|tojson}};
+
+new Chart(document.getElementById("myChart"),{
+
+type:"doughnut",
+
+data:{
+
+labels:["Income","Expense"],
+
+datasets:[{
+
+data:[income,expense],
+
+backgroundColor:[
+
+"#2563EB",
+
+"#EF4444"
+
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+position:"bottom"
+
+}
+
+}
+
+}
+
+});
+
+</script>
+
+{% endblock %}

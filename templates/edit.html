@@ -1,55 +1,385 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit Transaction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FinTrack Dashboard</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
+
 <body>
 
-<h2>Edit Transaction</h2>
+<div class="dashboard">
 
-<form method="POST">
+    <!-- ================= SIDEBAR ================= -->
 
-    <input
-        type="text"
-        name="name"
-        value="{{ item[1] }}"
-        required>
+    <aside class="sidebar">
 
-    <select name="type">
+        <div class="logo">
 
-        <option value="income"
-        {% if item[2]=="income" %}selected{% endif %}>
-        Income
-        </option>
+            <div class="logo-icon">
+                💰
+            </div>
 
-        <option value="expense"
-        {% if item[2]=="expense" %}selected{% endif %}>
-        Expense
-        </option>
+            <div>
+                <h2>FinTrack</h2>
+                <span>Personal Finance</span>
+            </div>
 
-    </select>
+        </div>
 
-    <input
-        type="number"
-        name="amount"
-        value="{{ item[3] }}"
-        required>
+        <nav>
 
-    <input
-        type="date"
-        name="date"
-        value="{{ item[4] }}"
-        required>
+            <a href="#dashboard" class="menu-btn active">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
 
-    <button type="submit">
-        Update
-    </button>
+            <a href="#transactions" class="menu-btn">
+                <i class="fa-solid fa-wallet"></i>
+                Transactions
+            </a>
 
-</form>
+            <a href="#reports" class="menu-btn">
+                <i class="fa-solid fa-chart-pie"></i>
+                Reports
+            </a>
 
-<br>
+        </nav>
 
-<a href="/">⬅ Back</a>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Expense Dashboard</h1>
+
+                <p>Track your income and expenses easily.</p>
+
+            </div>
+
+            <div class="profile">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <img src="https://ui-avatars.com/api/?name=K&background=2563eb&color=fff" width="45">
+
+            </div>
+
+        </header>
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard">
+
+            <div class="cards">
+
+                <div class="card balance">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                    <h3>Total Balance</h3>
+
+                    <h2>₹{{ balance }}</h2>
+
+                </div>
+
+                <div class="card income-card">
+
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+
+                    <h3>Total Income</h3>
+
+                    <h2>₹{{ income }}</h2>
+
+                </div>
+
+                <div class="card expense-card">
+
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+
+                    <h3>Total Expense</h3>
+
+                    <h2>₹{{ expense }}</h2>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= ADD TRANSACTION ================= -->
+
+        <section class="form-card">
+
+            <h2>
+                <i class="fa-solid fa-circle-plus"></i>
+                Add Transaction
+            </h2>
+
+            <form action="/add" method="POST" class="form">
+
+                <input
+                        type="text"
+                        name="name"
+                        placeholder="Description"
+                        required>
+
+                <select name="type">
+
+                    <option value="income">Income</option>
+
+                    <option value="expense">Expense</option>
+
+                </select>
+
+                <input
+                        type="number"
+                        name="amount"
+                        placeholder="Amount"
+                        required>
+
+                <input
+                        type="date"
+                        name="date"
+                        value="{{ current_date }}"
+                        required>
+
+                <button>
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add
+
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- SEARCH -->
+
+        <section class="toolbar">
+
+            <form method="GET" action="/" class="search-form">
+
+                <input
+                        type="text"
+                        name="search"
+                        placeholder="Search transaction..."
+                        value="{{ search }}">
+
+                <input
+                        type="date"
+                        name="filter_date"
+                        value="{{ filter_date }}">
+
+                <button>
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search
+
+                </button>
+
+                <a href="/" class="clear-btn">
+
+                    Reset
+
+                </a>
+
+            </form>
+
+            <a href="/export_csv" class="export-btn">
+
+                <i class="fa-solid fa-file-arrow-down"></i>
+
+                Export CSV
+
+            </a>
+
+        </section>
+
+        <!-- ================= TABLE ================= -->
+
+        <section id="transactions">
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <h2>
+
+                        <i class="fa-solid fa-wallet"></i>
+
+                        Transactions
+
+                    </h2>
+
+                </div>
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Description</th>
+
+                        <th>Type</th>
+
+                        <th>Date</th>
+
+                        <th>Amount</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for item in data %}
+
+                    <tr>
+
+                        <td>{{ item[1] }}</td>
+
+                        <td>
+
+                            {% if item[2]=='income' %}
+
+                            <span class="badge income">
+
+                                Income
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge expense">
+
+                                Expense
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ item[4] }}</td>
+
+                        <td>
+
+                            ₹{{ item[3] }}
+
+                        </td>
+
+                        <td>
+
+                            <a href="/edit/{{ item[0] }}" class="edit-btn">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </a>
+
+                            <a href="/delete/{{ item[0] }}" class="delete-btn">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- ================= REPORT ================= -->
+
+        <section id="reports">
+
+            <div class="chart-card">
+
+                <h2>
+
+                    Financial Report
+
+                </h2>
+
+                <canvas id="myChart"></canvas>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+const income={{income|tojson}};
+const expense={{expense|tojson}};
+
+new Chart(document.getElementById("myChart"),{
+
+type:"doughnut",
+
+data:{
+labels:["Income","Expense"],
+datasets:[{
+data:[income,expense],
+backgroundColor:[
+"#22c55e",
+"#ef4444"
+]
+}]
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{
+position:"bottom"
+}
+}
+}
+
+});
+
+</script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>

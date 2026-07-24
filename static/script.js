@@ -71,3 +71,57 @@ window.addEventListener("load", setActiveMenu); // ✅ fix on load
 function toggleSidebar() {
   document.getElementById("sidebar").classList.toggle("collapsed");
 }
+
+const menuToggle = document.getElementById("menu-toggle");
+const sidebar = document.getElementById("sidebar");
+const mainContent = document.getElementById("main-content");
+
+menuToggle.addEventListener("click", function () {
+    sidebar.classList.toggle("collapsed");
+    mainContent.classList.toggle("expanded");
+});
+
+
+// ================= Search & Notification =================
+
+const searchBtn = document.getElementById("searchBtn");
+const searchBox = document.getElementById("searchBox");
+
+const notificationBtn = document.getElementById("notificationBtn");
+const notificationPanel = document.getElementById("notificationPanel");
+
+if (searchBtn && searchBox) {
+    searchBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+
+        searchBox.classList.toggle("show");
+
+        if (notificationPanel) {
+            notificationPanel.classList.remove("show");
+        }
+    });
+}
+
+if (notificationBtn && notificationPanel) {
+    notificationBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+
+        notificationPanel.classList.toggle("show");
+
+        if (searchBox) {
+            searchBox.classList.remove("show");
+        }
+    });
+}
+
+document.addEventListener("click", function () {
+
+    if (searchBox) {
+        searchBox.classList.remove("show");
+    }
+
+    if (notificationPanel) {
+        notificationPanel.classList.remove("show");
+    }
+
+});

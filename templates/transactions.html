@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block page_title %}Transactions{% endblock %}
+
+{% block content %}
+
+<div class="box">
+
+    <div class="table-header">
+
+        <h2>Transaction History</h2>
+
+        <a href="/export_csv" class="btn">
+            <i class="fa-solid fa-file-csv"></i>
+            Export CSV
+        </a>
+
+    </div>
+
+    <br>
+
+    <form method="GET" action="/transactions" class="search-bar">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search description..."
+            value="{{ search }}">
+
+        <input
+            type="date"
+            name="filter_date"
+            value="{{ filter_date }}">
+
+        <button class="btn">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            Search
+
+        </button>
+
+        <a href="/transactions" class="btn secondary">
+
+            Reset
+
+        </a>
+
+    </form>
+
+    <br><br>
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>ID</th>
+
+            <th>Description</th>
+
+            <th>Type</th>
+
+            <th>Amount</th>
+
+            <th>Date</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for item in data %}
+
+        <tr>
+
+            <td>{{ item[0] }}</td>
+
+            <td>{{ item[1] }}</td>
+
+            <td>
+
+                {% if item[2]=="income" %}
+
+                <span class="income-badge">
+
+                    Income
+
+                </span>
+
+                {% else %}
+
+                <span class="expense-badge">
+
+                    Expense
+
+                </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                ₹{{ item[3] }}
+
+            </td>
+
+            <td>
+
+                {{ item[4] }}
+
+            </td>
+
+            <td>
+
+                <a href="/edit/{{ item[0] }}" class="action-btn edit">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                </a>
+
+                <a href="/delete/{{ item[0] }}"
+                   class="action-btn delete"
+                   onclick="return confirm('Delete this transaction?')">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

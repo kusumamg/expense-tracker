@@ -35,7 +35,8 @@ init_db()
 # ---------------- HOME ---------------- #
 
 @app.route("/")
-def index():
+@app.route("/dashboard")
+def dashboard():
 
     search = request.args.get("search", "")
     filter_date = request.args.get("filter_date", "")
@@ -68,7 +69,7 @@ def index():
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     return render_template(
-        "index.html",
+        "dashboard.html",
         data=data,
         balance=balance,
         income=income,
@@ -76,6 +77,109 @@ def index():
         current_date=current_date,
         search=search,
         filter_date=filter_date
+    )
+
+# Transactions page
+@app.route("/transactions")
+def transactions():
+
+    search = request.args.get("search", "")
+    filter_date = request.args.get("filter_date", "")
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    query = "SELECT * FROM expenses WHERE 1=1"
+    params = []
+
+    if search:
+        query += " AND name LIKE ?"
+        params.append("%" + search + "%")
+
+    if filter_date:
+        query += " AND date=?"
+        params.append(filter_date)
+
+    query += " ORDER BY id DESC"
+
+    cur.execute(query, params)
+
+    data = cur.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "transactions.html",
+        data=data,
+        search=search,
+        filter_date=filter_date
+    )
+
+# reports
+@app.route("/reports")
+def reports():
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM expenses")
+
+    data = cur.fetchall()
+
+    conn.close()
+
+    income = sum(x[3] for x in data if x[2] == "income")
+    expense = sum(x[3] for x in data if x[2] == "expense")
+
+    return render_template(
+        "reports.html",
+        income=income,
+        expense=expense
+    )
+
+
+# analytics
+@app.route("/analytics")
+def analytics():
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM expenses")
+
+    data = cur.fetchall()
+
+    conn.close()
+
+    income = sum(x[3] for x in data if x[2] == "income")
+    expense = sum(x[3] for x in data if x[2] == "expense")
+
+    balance = income - expense
+
+    return render_template(
+        "analytics.html",
+        income=income,
+        expense=expense,
+        balance=balance,
+        total=len(data)
+    )
+
+@app.route("/settings")
+def settings():
+
+    return render_template("settings.html")
+
+
+@app.route("/add_transaction")
+def add_transaction():
+
+    current_date = datetime.now().strftime("%Y-%m-%d")
+
+    return render_template(
+        "add_transaction.html",
+        current_date=current_date
     )
 
 # ---------------- ADD ---------------- #
@@ -105,7 +209,7 @@ def add():
     conn.commit()
     conn.close()
 
-    return redirect("/")
+    return redirect("/dashboard")
 
 # ---------------- EDIT ---------------- #
 
@@ -138,7 +242,7 @@ def edit(id):
         conn.commit()
         conn.close()
 
-        return redirect("/")
+        return redirect("/transactions")
 
     cur.execute(
         "SELECT * FROM expenses WHERE id=?",
@@ -170,7 +274,7 @@ def delete(id):
     conn.commit()
     conn.close()
 
-    return redirect("/")
+    return redirect("/transactions")
 
 # ---------------- EXPORT CSV ---------------- #
 
@@ -207,6 +311,8 @@ def export_csv():
     response.headers["Content-Type"] = "text/csv"
 
     return response
+
+
 
 
 # ---------------- RUN ---------------- #

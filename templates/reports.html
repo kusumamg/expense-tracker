@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block page_title %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="cards">
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Income</h4>
+
+                <h2>₹{{ income }}</h2>
+
+            </div>
+
+            <div class="card-icon green">
+
+                <i class="fa-solid fa-arrow-trend-up"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Expense</h4>
+
+                <h2>₹{{ expense }}</h2>
+
+            </div>
+
+            <div class="card-icon red">
+
+                <i class="fa-solid fa-arrow-trend-down"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Current Balance</h4>
+
+                <h2>₹{{ income-expense }}</h2>
+
+            </div>
+
+            <div class="card-icon blue">
+
+                <i class="fa-solid fa-wallet"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="report-grid">
+
+    <div class="box">
+
+        <h2>Income vs Expense</h2>
+
+        <br>
+
+        <canvas id="pieChart"></canvas>
+
+    </div>
+
+    <div class="box">
+
+        <h2>Monthly Expenses</h2>
+
+        <br>
+
+        <canvas id="barChart"></canvas>
+
+    </div>
+
+</div>
+
+<script>
+
+const income={{ income|tojson }};
+const expense={{ expense|tojson }};
+
+new Chart(document.getElementById("pieChart"),{
+
+type:"doughnut",
+
+data:{
+
+labels:["Income","Expense"],
+
+datasets:[{
+
+data:[income,expense],
+
+backgroundColor:[
+
+"#2563EB",
+
+"#EF4444"
+
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+position:"bottom"
+
+}
+
+}
+
+}
+
+});
+
+new Chart(document.getElementById("barChart"),{
+
+type:"bar",
+
+data:{
+
+labels:["Income","Expense"],
+
+datasets:[{
+
+data:[income,expense],
+
+backgroundColor:[
+
+"#2563EB",
+
+"#EF4444"
+
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+display:false
+
+}
+
+}
+
+}
+
+});
+
+</script>
+
+{% endblock %}

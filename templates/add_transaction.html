@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Add Transaction{% endblock %}
+{% block page_title %}Add Transaction{% endblock %}
+
+{% block content %}
+
+<div class="box">
+
+    <form action="/add" method="POST">
+
+        <label>Description</label>
+        <input type="text" name="name" required>
+
+        <label>Type</label>
+        <select name="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+
+        <label>Amount</label>
+        <input type="number" name="amount" required>
+
+        <label>Date</label>
+        <input type="date" name="date" value="{{ current_date }}" required>
+
+        <br><br>
+
+        <button class="btn">
+            Add Transaction
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
