@@ -22,6 +22,23 @@ def init_db():
         )
     """)
 
+    cur.execute("""
+CREATE TABLE IF NOT EXISTS settings(
+    id INTEGER PRIMARY KEY,
+    theme TEXT DEFAULT 'light',
+    currency TEXT DEFAULT '₹',
+    date_format TEXT DEFAULT 'YYYY-MM-DD',
+    notifications INTEGER DEFAULT 1
+)
+""")
+
+    cur.execute("""
+INSERT OR IGNORE INTO settings
+(id, theme, currency, date_format, notifications)
+VALUES
+(1,'light','₹','YYYY-MM-DD',1)
+""")
+
     conn.commit()
     conn.close()
 
@@ -60,13 +77,20 @@ def dashboard():
     cur.execute(query, params)
     data = cur.fetchall()
 
-    conn.close()
-
     income = sum(item[3] for item in data if item[2] == "income")
     expense = sum(item[3] for item in data if item[2] == "expense")
     balance = income - expense
 
     current_date = datetime.now().strftime("%Y-%m-%d")
+
+    # Get theme and currency
+    cur.execute("SELECT theme, currency FROM settings WHERE id=1")
+    setting = cur.fetchone()
+
+    theme = setting[0]
+    currency = setting[1]
+
+    conn.close()
 
     return render_template(
         "dashboard.html",
@@ -74,10 +98,13 @@ def dashboard():
         balance=balance,
         income=income,
         expense=expense,
+        theme=theme,
+        currency=currency,
         current_date=current_date,
         search=search,
         filter_date=filter_date
     )
+
 
 # Transactions page
 @app.route("/transactions")
@@ -103,18 +130,21 @@ def transactions():
     query += " ORDER BY id DESC"
 
     cur.execute(query, params)
-
     data = cur.fetchall()
+
+    # Get selected currency
+    cur.execute("SELECT currency FROM settings WHERE id=1")
+    currency = cur.fetchone()[0]
 
     conn.close()
 
     return render_template(
         "transactions.html",
         data=data,
+        currency=currency,
         search=search,
         filter_date=filter_date
     )
-
 # reports
 @app.route("/reports")
 def reports():
@@ -164,22 +194,6 @@ def analytics():
         expense=expense,
         balance=balance,
         total=len(data)
-    )
-
-@app.route("/settings")
-def settings():
-
-    return render_template("settings.html")
-
-
-@app.route("/add_transaction")
-def add_transaction():
-
-    current_date = datetime.now().strftime("%Y-%m-%d")
-
-    return render_template(
-        "add_transaction.html",
-        current_date=current_date
     )
 
 # ---------------- ADD ---------------- #
@@ -276,7 +290,7 @@ def delete(id):
 
     return redirect("/transactions")
 
-# ---------------- EXPORT CSV ---------------- #
+
 
 # ---------------- EXPORT CSV ---------------- #
 
@@ -313,7 +327,53 @@ def export_csv():
     return response
 
 
+ # ---------------- SETTINGS ---------------- #
 
+@app.route("/settings")
+def settings():
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM settings WHERE id=1")
+
+    settings = cur.fetchone()
+
+    conn.close()
+
+    return render_template(
+        "settings.html",
+        settings=settings
+    )
+
+
+@app.route("/save_settings", methods=["POST"])
+def save_settings():
+
+    theme = request.form["theme"]
+    currency = request.form["currency"]
+    date_format = request.form["date_format"]
+
+    notifications = 1 if request.form.get("notifications") else 0
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE settings
+        SET
+            theme=?,
+            currency=?,
+            date_format=?,
+            notifications=?
+        WHERE id=1
+    """,
+    (theme, currency, date_format, notifications))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/settings")
 
 # ---------------- RUN ---------------- #
 

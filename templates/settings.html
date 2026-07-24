@@ -1,31 +1,204 @@
 {% extends "base.html" %}
 
 {% block title %}Settings{% endblock %}
+
 {% block page_title %}Settings{% endblock %}
 
 {% block content %}
 
-<div class="box">
+<div class="settings-container">
 
-<h2>Settings</h2>
+    <h1>Application Settings</h1>
 
-<hr><br>
+    <form action="/save_settings" method="POST">
 
-<h3>Application</h3>
+        <!-- Account -->
 
-<p>Expense Tracker Version 1.0</p>
+        <div class="settings-card">
 
-<p>Built with Flask & SQLite</p>
+            <h2><i class="fa-solid fa-user"></i> Account</h2>
 
-<br>
+            <div class="setting-row">
+                <label>Name</label>
+                <input type="text" value="User" readonly>
+            </div>
 
-<button class="btn">
-Backup Database
-</button>
+            <div class="setting-row">
+                <label>Email</label>
+                <input type="email" value="user@example.com" readonly>
+            </div>
 
-<button class="btn">
-Export Reports
-</button>
+            <button type="button" class="btn">
+                Change Password
+            </button>
+
+        </div>
+
+        <!-- Appearance -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-palette"></i> Appearance</h2>
+
+            <div class="setting-row">
+
+                <label>Theme</label>
+
+                <select name="theme">
+
+                    <option value="light"
+                    {% if settings[1]=='light' %}selected{% endif %}>
+                        Light
+                    </option>
+
+                    <option value="dark"
+                    {% if settings[1]=='dark' %}selected{% endif %}>
+                        Dark
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- Currency -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-indian-rupee-sign"></i> Currency</h2>
+
+            <div class="setting-row">
+
+                <label>Currency</label>
+
+                <select name="currency">
+
+                    <option value="₹"
+                    {% if settings[2]=='₹' %}selected{% endif %}>
+                        ₹ Indian Rupee
+                    </option>
+
+                    <option value="$"
+                    {% if settings[2]=='$' %}selected{% endif %}>
+                        $ US Dollar
+                    </option>
+
+                    <option value="€"
+                    {% if settings[2]=='€' %}selected{% endif %}>
+                        € Euro
+                    </option>
+
+                    <option value="£"
+                    {% if settings[2]=='£' %}selected{% endif %}>
+                        £ British Pound
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- Date Format -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-calendar-days"></i> Date Format</h2>
+
+            <div class="setting-row">
+
+                <label>Date Format</label>
+
+                <select name="date_format">
+
+                    <option value="YYYY-MM-DD"
+                    {% if settings[3]=='YYYY-MM-DD' %}selected{% endif %}>
+                        YYYY-MM-DD
+                    </option>
+
+                    <option value="DD-MM-YYYY"
+                    {% if settings[3]=='DD-MM-YYYY' %}selected{% endif %}>
+                        DD-MM-YYYY
+                    </option>
+
+                    <option value="MM-DD-YYYY"
+                    {% if settings[3]=='MM-DD-YYYY' %}selected{% endif %}>
+                        MM-DD-YYYY
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- Notifications -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-bell"></i> Notifications</h2>
+
+            <div class="checkbox-row">
+
+                <input
+                    type="checkbox"
+                    name="notifications"
+                    {% if settings[4] %}checked{% endif %}>
+
+                <label>Enable Notifications</label>
+
+            </div>
+
+        </div>
+
+        <!-- Data -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-database"></i> Data Management</h2>
+
+            <div class="button-group">
+
+                <a href="/export_csv" class="btn">
+                    Export CSV
+                </a>
+
+                <button type="button" class="btn">
+                    Backup Database
+                </button>
+
+                <button type="button" class="btn danger">
+                    Delete All Transactions
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- About -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-circle-info"></i> About</h2>
+
+            <p><strong>Expense Tracker</strong></p>
+
+            <p>Version 1.0</p>
+
+            <p>Built using Flask, SQLite, HTML, CSS and JavaScript.</p>
+
+        </div>
+
+        <div style="text-align:right;margin-top:20px;">
+
+            <button type="submit" class="btn">
+                Save Settings
+            </button>
+
+        </div>
+
+    </form>
 
 </div>
 

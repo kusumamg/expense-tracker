@@ -52,97 +52,60 @@
 
     <br><br>
 
-    <table>
+    <div class="table-responsive">
 
-        <thead>
+<table>
 
-        <tr>
+<tr>
+    <th>ID</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Action</th>
+</tr>
 
-            <th>ID</th>
+{% for item in data %}
 
-            <th>Description</th>
+<tr>
 
-            <th>Type</th>
+<td>{{ item[0] }}</td>
 
-            <th>Amount</th>
+<td>{{ item[1] }}</td>
 
-            <th>Date</th>
+<td>
+    {% if item[2] == "income" %}
+        <span class="income-badge">Income</span>
+    {% else %}
+        <span class="expense-badge">Expense</span>
+    {% endif %}
+</td>
 
-            <th>Actions</th>
+{{ currency }}{{ item[3] }}
 
-        </tr>
+<td>{{ item[4] }}</td>
 
-        </thead>
+<td>
 
-        <tbody>
+<a href="/edit/{{ item[0] }}" class="action-btn edit">
+    <i class="fa-solid fa-pen"></i>
+</a>
 
-        {% for item in data %}
+<a href="/delete/{{ item[0] }}"
+   class="action-btn delete"
+   onclick="return confirm('Delete this transaction?')">
+    <i class="fa-solid fa-trash"></i>
+</a>
 
-        <tr>
+</td>
 
-            <td>{{ item[0] }}</td>
+</tr>
 
-            <td>{{ item[1] }}</td>
+{% endfor %}
 
-            <td>
+</table>
 
-                {% if item[2]=="income" %}
-
-                <span class="income-badge">
-
-                    Income
-
-                </span>
-
-                {% else %}
-
-                <span class="expense-badge">
-
-                    Expense
-
-                </span>
-
-                {% endif %}
-
-            </td>
-
-            <td>
-
-                ₹{{ item[3] }}
-
-            </td>
-
-            <td>
-
-                {{ item[4] }}
-
-            </td>
-
-            <td>
-
-                <a href="/edit/{{ item[0] }}" class="action-btn edit">
-
-                    <i class="fa-solid fa-pen"></i>
-
-                </a>
-
-                <a href="/delete/{{ item[0] }}"
-                   class="action-btn delete"
-                   onclick="return confirm('Delete this transaction?')">
-
-                    <i class="fa-solid fa-trash"></i>
-
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-        </tbody>
-
-    </table>
+</div>
 
 </div>
 

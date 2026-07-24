@@ -68,17 +68,23 @@ window.addEventListener("load", setActiveMenu); // ✅ fix on load
 
 
 // ================= Sidebar Toggle =================
-function toggleSidebar() {
-  document.getElementById("sidebar").classList.toggle("collapsed");
-}
-
 const menuToggle = document.getElementById("menu-toggle");
 const sidebar = document.getElementById("sidebar");
 const mainContent = document.getElementById("main-content");
 
-menuToggle.addEventListener("click", function () {
-    sidebar.classList.toggle("collapsed");
-    mainContent.classList.toggle("expanded");
+menuToggle.addEventListener("click", () => {
+
+    if(window.innerWidth <= 768){
+
+        sidebar.classList.toggle("active");
+
+    }else{
+
+        sidebar.classList.toggle("collapsed");
+        mainContent.classList.toggle("expanded");
+
+    }
+
 });
 
 
