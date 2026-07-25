@@ -1083,3 +1083,61 @@ table{
 .table-responsive table{
     min-width:700px;
 }
+
+/* ================= DARK MODE ================= */
+
+body.dark{
+    background:#0F172A;
+    color:#ffffff;
+}
+
+body.dark .main{
+    background:#0F172A;
+}
+
+body.dark .topbar{
+    background:#1E293B;
+    color:#ffffff;
+}
+
+body.dark .sidebar{
+    background:#020617;
+}
+
+body.dark .card,
+body.dark .settings-card,
+body.dark .table-container{
+    background:#1E293B;
+    color:#ffffff;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea{
+    background:#334155;
+    color:#ffffff;
+    border:1px solid #475569;
+}
+
+body.dark table{
+    background:#1E293B;
+    color:#ffffff;
+}
+
+body.dark th{
+    background:#334155;
+}
+
+body.dark td{
+    border-color:#475569;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark p,
+body.dark label,
+body.dark span,
+body.dark a{
+    color:#ffffff;
+}

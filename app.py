@@ -49,6 +49,30 @@ def get_db():
 
 init_db()
 
+
+# theme 
+@app.context_processor
+def inject_settings():
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT theme, currency FROM settings WHERE id=1")
+    row = cur.fetchone()
+
+    conn.close()
+
+    if row:
+        return {
+            "theme": row[0],
+            "currency": row[1]
+        }
+
+    return {
+        "theme": "light",
+        "currency": "₹"
+    }
+
 # ---------------- HOME ---------------- #
 
 @app.route("/")
@@ -336,8 +360,19 @@ def settings():
     cur = conn.cursor()
 
     cur.execute("SELECT * FROM settings WHERE id=1")
-
     settings = cur.fetchone()
+
+    if settings is None:
+        cur.execute("""
+            INSERT INTO settings
+            (id, theme, currency, date_format, notifications)
+            VALUES
+            (1,'light','₹','YYYY-MM-DD',1)
+        """)
+        conn.commit()
+
+        cur.execute("SELECT * FROM settings WHERE id=1")
+        settings = cur.fetchone()
 
     conn.close()
 
@@ -345,7 +380,6 @@ def settings():
         "settings.html",
         settings=settings
     )
-
 
 @app.route("/save_settings", methods=["POST"])
 def save_settings():
@@ -374,6 +408,21 @@ def save_settings():
     conn.close()
 
     return redirect("/settings")
+
+# add transaction page
+@app.route("/add_transaction")
+def add_transaction():
+
+    current_date = datetime.now().strftime("%Y-%m-%d")
+
+    return render_template(
+        "add_transaction.html",
+        current_date=current_date
+    )
+
+
+
+
 
 # ---------------- RUN ---------------- #
 

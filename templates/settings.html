@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block title %}Settings{% endblock %}
-
 {% block page_title %}Settings{% endblock %}
 
 {% block content %}
@@ -12,28 +11,6 @@
 
     <form action="/save_settings" method="POST">
 
-        <!-- Account -->
-
-        <div class="settings-card">
-
-            <h2><i class="fa-solid fa-user"></i> Account</h2>
-
-            <div class="setting-row">
-                <label>Name</label>
-                <input type="text" value="User" readonly>
-            </div>
-
-            <div class="setting-row">
-                <label>Email</label>
-                <input type="email" value="user@example.com" readonly>
-            </div>
-
-            <button type="button" class="btn">
-                Change Password
-            </button>
-
-        </div>
-
         <!-- Appearance -->
 
         <div class="settings-card">
@@ -41,19 +18,18 @@
             <h2><i class="fa-solid fa-palette"></i> Appearance</h2>
 
             <div class="setting-row">
-
                 <label>Theme</label>
 
                 <select name="theme">
 
                     <option value="light"
                     {% if settings[1]=='light' %}selected{% endif %}>
-                        Light
+                        ☀ Light
                     </option>
 
                     <option value="dark"
                     {% if settings[1]=='dark' %}selected{% endif %}>
-                        Dark
+                        🌙 Dark
                     </option>
 
                 </select>
@@ -66,7 +42,7 @@
 
         <div class="settings-card">
 
-            <h2><i class="fa-solid fa-indian-rupee-sign"></i> Currency</h2>
+            <h2><i class="fa-solid fa-coins"></i> Currency</h2>
 
             <div class="setting-row">
 
@@ -74,23 +50,19 @@
 
                 <select name="currency">
 
-                    <option value="₹"
-                    {% if settings[2]=='₹' %}selected{% endif %}>
+                    <option value="₹" {% if settings[2]=='₹' %}selected{% endif %}>
                         ₹ Indian Rupee
                     </option>
 
-                    <option value="$"
-                    {% if settings[2]=='$' %}selected{% endif %}>
+                    <option value="$" {% if settings[2]=='$' %}selected{% endif %}>
                         $ US Dollar
                     </option>
 
-                    <option value="€"
-                    {% if settings[2]=='€' %}selected{% endif %}>
+                    <option value="€" {% if settings[2]=='€' %}selected{% endif %}>
                         € Euro
                     </option>
 
-                    <option value="£"
-                    {% if settings[2]=='£' %}selected{% endif %}>
+                    <option value="£" {% if settings[2]=='£' %}selected{% endif %}>
                         £ British Pound
                     </option>
 
@@ -100,11 +72,11 @@
 
         </div>
 
-        <!-- Date Format -->
+        <!-- Date -->
 
         <div class="settings-card">
 
-            <h2><i class="fa-solid fa-calendar-days"></i> Date Format</h2>
+            <h2><i class="fa-solid fa-calendar"></i> Date Format</h2>
 
             <div class="setting-row">
 
@@ -152,6 +124,38 @@
 
         </div>
 
+        <!-- Dashboard -->
+
+        <div class="settings-card">
+
+            <h2><i class="fa-solid fa-chart-line"></i> Dashboard</h2>
+
+            <div class="checkbox-row">
+
+                <input type="checkbox" checked>
+
+                <label>Show Recent Transactions</label>
+
+            </div>
+
+            <div class="checkbox-row">
+
+                <input type="checkbox" checked>
+
+                <label>Show Income & Expense Chart</label>
+
+            </div>
+
+            <div class="checkbox-row">
+
+                <input type="checkbox">
+
+                <label>Compact Dashboard Mode</label>
+
+            </div>
+
+        </div>
+
         <!-- Data -->
 
         <div class="settings-card">
@@ -161,14 +165,17 @@
             <div class="button-group">
 
                 <a href="/export_csv" class="btn">
+                    <i class="fa-solid fa-file-csv"></i>
                     Export CSV
                 </a>
 
                 <button type="button" class="btn">
+                    <i class="fa-solid fa-download"></i>
                     Backup Database
                 </button>
 
                 <button type="button" class="btn danger">
+                    <i class="fa-solid fa-trash"></i>
                     Delete All Transactions
                 </button>
 
@@ -182,17 +189,36 @@
 
             <h2><i class="fa-solid fa-circle-info"></i> About</h2>
 
-            <p><strong>Expense Tracker</strong></p>
+            <table style="width:100%;border:none;">
 
-            <p>Version 1.0</p>
+                <tr>
+                    <td><strong>Application</strong></td>
+                    <td>Expense Tracker</td>
+                </tr>
 
-            <p>Built using Flask, SQLite, HTML, CSS and JavaScript.</p>
+                <tr>
+                    <td><strong>Version</strong></td>
+                    <td>1.0</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Framework</strong></td>
+                    <td>Flask</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Database</strong></td>
+                    <td>SQLite</td>
+                </tr>
+
+            </table>
 
         </div>
 
-        <div style="text-align:right;margin-top:20px;">
+        <div style="text-align:right;margin-top:25px;">
 
             <button type="submit" class="btn">
+                <i class="fa-solid fa-floppy-disk"></i>
                 Save Settings
             </button>
 
