@@ -1141,3 +1141,22 @@ body.dark span,
 body.dark a{
     color:#ffffff;
 }
+
+.report-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(450px,1fr));
+    gap:25px;
+}
+
+.report-grid .box{
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    height:450px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+.report-grid canvas{
+    width:100% !important;
+    height:340px !important;
+}

@@ -6,6 +6,8 @@
 
 {% block content %}
 
+<!-- Summary Cards -->
+
 <div class="cards">
 
     <div class="card">
@@ -60,7 +62,7 @@
 
                 <h4>Current Balance</h4>
 
-                <h2>₹{{ income-expense }}</h2>
+                <h2>₹{{ income - expense }}</h2>
 
             </div>
 
@@ -78,23 +80,25 @@
 
 <br>
 
+<!-- Charts -->
+
 <div class="report-grid">
+
+    <!-- Income vs Expense -->
 
     <div class="box">
 
         <h2>Income vs Expense</h2>
 
-        <br>
-
         <canvas id="pieChart"></canvas>
 
     </div>
 
+    <!-- Monthly Expenses -->
+
     <div class="box">
 
         <h2>Monthly Expenses</h2>
-
-        <br>
 
         <canvas id="barChart"></canvas>
 
@@ -102,92 +106,110 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 
-const income={{ income|tojson }};
-const expense={{ expense|tojson }};
+const income = {{ income|tojson }};
+const expense = {{ expense|tojson }};
 
-new Chart(document.getElementById("pieChart"),{
+const months = {{ months|tojson }};
+const monthlyExpense = {{ monthly_expense|tojson }};
 
-type:"doughnut",
+// ---------------- Doughnut Chart ----------------
 
-data:{
+new Chart(document.getElementById("pieChart"), {
 
-labels:["Income","Expense"],
+    type: "doughnut",
 
-datasets:[{
+    data: {
 
-data:[income,expense],
+        labels: ["Income", "Expense"],
 
-backgroundColor:[
+        datasets: [{
 
-"#2563EB",
+            data: [income, expense],
 
-"#EF4444"
+            backgroundColor: [
+                "#22C55E",
+                "#EF4444"
+            ],
 
-]
+            borderWidth: 0
 
-}]
+        }]
 
-},
+    },
 
-options:{
+    options: {
 
-responsive:true,
+        responsive: true,
+        maintainAspectRatio: false,
 
-plugins:{
+        plugins: {
 
-legend:{
+            legend: {
 
-position:"bottom"
+                position: "bottom"
 
-}
+            }
 
-}
+        }
 
-}
+    }
 
 });
 
-new Chart(document.getElementById("barChart"),{
+// ---------------- Monthly Expense Chart ----------------
 
-type:"bar",
+new Chart(document.getElementById("barChart"), {
 
-data:{
+    type: "bar",
 
-labels:["Income","Expense"],
+    data: {
 
-datasets:[{
+        labels: months,
 
-data:[income,expense],
+        datasets: [{
 
-backgroundColor:[
+            label: "Expenses",
 
-"#2563EB",
+            data: monthlyExpense,
 
-"#EF4444"
+            backgroundColor: "#2563EB",
 
-]
+            borderRadius: 8
 
-}]
+        }]
 
-},
+    },
 
-options:{
+    options: {
 
-responsive:true,
+        responsive: true,
+        maintainAspectRatio: false,
 
-plugins:{
+        plugins: {
 
-legend:{
+            legend: {
 
-display:false
+                display: false
 
-}
+            }
 
-}
+        },
 
-}
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
 
 });
 

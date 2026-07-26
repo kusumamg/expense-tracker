@@ -174,22 +174,33 @@ def transactions():
 def reports():
 
     conn = get_db()
-
     cur = conn.cursor()
 
     cur.execute("SELECT * FROM expenses")
-
     data = cur.fetchall()
-
-    conn.close()
 
     income = sum(x[3] for x in data if x[2] == "income")
     expense = sum(x[3] for x in data if x[2] == "expense")
 
+    # Months
+    months = ["Jan","Feb","Mar","Apr","May","Jun",
+              "Jul","Aug","Sep","Oct","Nov","Dec"]
+
+    monthly_expense = [0] * 12
+
+    for row in data:
+        if row[2] == "expense":
+            month = int(row[4].split("-")[1]) - 1
+            monthly_expense[month] += row[3]
+
+    conn.close()
+
     return render_template(
         "reports.html",
         income=income,
-        expense=expense
+        expense=expense,
+        months=months,
+        monthly_expense=monthly_expense
     )
 
 
