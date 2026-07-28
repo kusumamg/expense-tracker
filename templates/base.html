@@ -13,24 +13,24 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <!-- CSS -->
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+        href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="{{ theme }}"></body>
+<body class="{{ theme }}">
 
 <div class="container">
 
     <!-- ================= SIDEBAR ================= -->
 
-    <div class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
 
         <div class="logo">
             <i class="fa-solid fa-wallet"></i>
@@ -90,13 +90,13 @@
             </a>
         </div>
 
-    </div>
+    </aside>
 
-    <!-- ================= MAIN ================= -->
+    <!-- ================= MAIN CONTENT ================= -->
 
     <main class="main" id="main-content">
 
-        <!-- Top Bar -->
+        <!-- ================= TOP BAR ================= -->
 
         <header class="topbar">
 
@@ -116,38 +116,16 @@
 
             <div class="top-right">
 
-                <button class="icon-btn" id="searchBtn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-
-                <button class="icon-btn" id="notificationBtn">
-                    <i class="fa-regular fa-bell"></i>
-                </button>
-
                 <img
-                    src="https://ui-avatars.com/api/?name=Kusuma&background=2563EB&color=fff"
-                    class="profile"
-                    alt="Profile">
+                    src="https://ui-avatars.com/api/?name=Kusuma&background=2563EB&color=ffffff"
+                    alt="Profile"
+                    class="profile">
 
             </div>
 
         </header>
 
-        <!-- Search Box -->
-
-        <div id="searchBox" class="search-box">
-            <input type="text" placeholder="Search...">
-        </div>
-
-        <!-- Notification Panel -->
-
-        <div id="notificationPanel" class="notification-panel">
-            <h3>Notifications</h3>
-            <hr>
-            <p>No new notifications.</p>
-        </div>
-
-        <!-- Page Content -->
+        <!-- ================= PAGE CONTENT ================= -->
 
         <section class="content">
 
@@ -160,6 +138,7 @@
 
 </div>
 
+<!-- JavaScript -->
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>

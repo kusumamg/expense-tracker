@@ -56,52 +56,56 @@
 
 <table>
 
-<tr>
-    <th>ID</th>
-    <th>Description</th>
-    <th>Type</th>
-    <th>Amount</th>
-    <th>Date</th>
-    <th>Action</th>
-</tr>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
 
-{% for item in data %}
+    <tbody>
 
-<tr>
+    {% for item in data %}
 
-<td>{{ item[0] }}</td>
+    <tr>
 
-<td>{{ item[1] }}</td>
+        <td>{{ item[0] }}</td>
 
-<td>
-    {% if item[2] == "income" %}
-        <span class="income-badge">Income</span>
-    {% else %}
-        <span class="expense-badge">Expense</span>
-    {% endif %}
-</td>
+        <td>{{ item[1] }}</td>
 
-{{ currency }}{{ item[3] }}
+        <td>
+            {% if item[2] == "income" %}
+                <span class="income-badge">Income</span>
+            {% else %}
+                <span class="expense-badge">Expense</span>
+            {% endif %}
+        </td>
 
-<td>{{ item[4] }}</td>
+        <td>{{ currency }}{{ item[3] }}</td>
 
-<td>
+        <td>{{ item[4] }}</td>
 
-<a href="/edit/{{ item[0] }}" class="action-btn edit">
-    <i class="fa-solid fa-pen"></i>
-</a>
+        <td>
+            <a href="/edit/{{ item[0] }}" class="action-btn edit">
+                <i class="fa-solid fa-pen"></i>
+            </a>
 
-<a href="/delete/{{ item[0] }}"
-   class="action-btn delete"
-   onclick="return confirm('Delete this transaction?')">
-    <i class="fa-solid fa-trash"></i>
-</a>
+            <a href="/delete/{{ item[0] }}"
+               class="action-btn delete"
+               onclick="return confirm('Delete this transaction?')">
+                <i class="fa-solid fa-trash"></i>
+            </a>
+        </td>
 
-</td>
+    </tr>
 
-</tr>
+    {% endfor %}
 
-{% endfor %}
+    </tbody>
 
 </table>
 
