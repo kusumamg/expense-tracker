@@ -1,16 +1,34 @@
-from flask import Flask, render_template, request, redirect, make_response
+from flask import Flask, render_template, request, redirect, make_response, url_for, flash
 import sqlite3
 import csv
 from datetime import datetime
 import io
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    login_user,
+    login_required,
+    logout_user,
+    current_user
+)
 
 app = Flask(__name__)
+app.secret_key = "fintrack_secret_key"
+
+login_manager = LoginManager()
+
+login_manager.init_app(app)
+
+login_manager.login_view = "login"
 
 # ---------------- DATABASE ---------------- #
 
 def init_db():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
+
+    # ---------------- Expenses Table ---------------- #
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
@@ -22,22 +40,35 @@ def init_db():
         )
     """)
 
-    cur.execute("""
-CREATE TABLE IF NOT EXISTS settings(
-    id INTEGER PRIMARY KEY,
-    theme TEXT DEFAULT 'light',
-    currency TEXT DEFAULT '₹',
-    date_format TEXT DEFAULT 'YYYY-MM-DD',
-    notifications INTEGER DEFAULT 1
-)
-""")
+    # ---------------- Users Table ---------------- #
 
     cur.execute("""
-INSERT OR IGNORE INTO settings
-(id, theme, currency, date_format, notifications)
-VALUES
-(1,'light','₹','YYYY-MM-DD',1)
-""")
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )
+    """)
+
+    # ---------------- Settings Table ---------------- #
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS settings(
+            id INTEGER PRIMARY KEY,
+            theme TEXT DEFAULT 'light',
+            currency TEXT DEFAULT '₹',
+            date_format TEXT DEFAULT 'YYYY-MM-DD',
+            notifications INTEGER DEFAULT 1
+        )
+    """)
+
+    cur.execute("""
+        INSERT OR IGNORE INTO settings
+        (id, theme, currency, date_format, notifications)
+        VALUES
+        (1,'light','₹','YYYY-MM-DD',1)
+    """)
 
     conn.commit()
     conn.close()
@@ -47,8 +78,43 @@ def get_db():
     return sqlite3.connect("database.db")
 
 
-init_db()
+# ---------------- USER CLASS ---------------- #
 
+class User(UserMixin):
+
+    def __init__(self, id, name, email):
+        self.id = id
+        self.name = name
+        self.email = email
+
+
+# ---------------- USER LOADER ---------------- #
+
+@login_manager.user_loader
+def load_user(user_id):
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT id, name, email FROM users WHERE id=?",
+        (user_id,)
+    )
+
+    row = cur.fetchone()
+    conn.close()
+
+    if row:
+        return User(
+            row[0],
+            row[1],
+            row[2]
+        )
+
+    return None
+
+
+init_db()
 
 # theme 
 @app.context_processor
@@ -431,8 +497,113 @@ def add_transaction():
         current_date=current_date
     )
 
+# registering
+@app.route("/register", methods=["GET", "POST"])
+def register():
 
+    if request.method == "POST":
 
+        name = request.form["name"].strip()
+        email = request.form["email"].strip().lower()
+        password = request.form["password"]
+        confirm_password = request.form["confirm_password"]
+
+        # Passwords must match
+        if password != confirm_password:
+            flash("Passwords do not match.", "error")
+            return redirect(url_for("register"))
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        # Check if email already exists
+        cur.execute(
+            "SELECT id FROM users WHERE email=?",
+            (email,)
+        )
+
+        existing_user = cur.fetchone()
+
+        if existing_user:
+            conn.close()
+            flash("Email already registered.", "error")
+            return redirect(url_for("register"))
+
+        hashed_password = generate_password_hash(password)
+
+        cur.execute(
+            """
+            INSERT INTO users(name,email,password)
+            VALUES(?,?,?)
+            """,
+            (name, email, hashed_password)
+        )
+
+        conn.commit()
+        conn.close()
+
+        flash("Account created successfully! Please login.", "success")
+
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
+
+# login
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        email = request.form["email"].strip().lower()
+        password = request.form["password"]
+
+        remember = "remember" in request.form
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            SELECT id, name, email, password
+            FROM users
+            WHERE email=?
+            """,
+            (email,)
+        )
+
+        user = cur.fetchone()
+
+        conn.close()
+
+        if user and check_password_hash(user[3], password):
+
+            login_user(
+                User(
+                    user[0],
+                    user[1],
+                    user[2]
+                ),
+                remember=remember
+            )
+
+            flash("Welcome back!", "success")
+
+            return redirect(url_for("dashboard"))
+
+        flash("Invalid email or password.", "error")
+
+    return render_template("login.html")
+
+# logout
+@app.route("/logout")
+@login_required
+def logout():
+
+    logout_user()
+
+    flash("Logged out successfully.","success")
+
+    return redirect(url_for("login"))
 
 
 # ---------------- RUN ---------------- #
